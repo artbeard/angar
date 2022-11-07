@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent, defineAsyncComponent, markRaw } from 'vue'
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -20,14 +20,14 @@ export default defineComponent({
 	data: () => ({
 		tabs: [
 			{
-				title: 'Ангар холодный', content: defineAsyncComponent(
+				title: 'Ангар холодный', content: markRaw(defineAsyncComponent(
 					() => import('./components/cold-angar.vue')
-				)
+				))
 			},
 			{
-				title: 'Ангар утепленный', content: defineAsyncComponent(
+				title: 'Ангар утепленный', content: markRaw(defineAsyncComponent(
 					() => import('./components/insulated-angar.vue')
-				)
+				))
 			},
 		],
 	}),
