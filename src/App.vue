@@ -1,26 +1,52 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+	<TabView>
+		<TabPanel v-for="tab in tabs" :key="tab.title" :header="tab.title">
+			<component :is="tab.content"></component>
+		</TabPanel>
+	</TabView>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { defineComponent, defineAsyncComponent } from 'vue'
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+export default defineComponent({
+	name: 'App',
+	components: {
+		TabView,
+		TabPanel
+	},
+	data: () => ({
+		tabs: [
+			{
+				title: 'Ангар холодный', content: defineAsyncComponent(
+					() => import('./components/cold-angar.vue')
+				)
+			},
+			{
+				title: 'Ангар утепленный', content: defineAsyncComponent(
+					() => import('./components/insulated-angar.vue')
+				)
+			},
+		],
+	}),
+})
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss" scoped>
+.tabview-custom {
+	i, span {
+		vertical-align: middle;
+	}
+
+	span {
+		margin: 0 .5rem;
+	}
+}
+
+.p-tabview p {
+	line-height: 1.5;
+	margin: 0;
 }
 </style>
