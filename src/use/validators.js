@@ -1,6 +1,7 @@
 import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
 import {cold as cfg} from '../assets/js/cgf'
+import {insulated as ins_cfg} from '../assets/js/cgf'
 
 const coldValidators = {
 	length: {
@@ -69,11 +70,11 @@ const thicknessValidators = {
     thicknessInsulation: {
 		minValue: helpers.withMessage(
 			({$params}) => `Минимальная толщина утепления ${$params.min} м`,
-			minValue(cfg.limits.widthGates.min)
+			minValue(ins_cfg.limits.thicknessInsulation.min)
 		),
 		maxValue: helpers.withMessage(
 			({$params}) => `Минимальная толщина утепления ${$params.max} м`,
-			maxValue(cfg.limits.widthGates.max)
+			maxValue(ins_cfg.limits.thicknessInsulation.max)
 		)
 	},
 }

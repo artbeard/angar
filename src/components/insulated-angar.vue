@@ -131,8 +131,9 @@ export default defineComponent({
 import { ref, reactive, computed, onMounted, onUnmounted, inject } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
-import {cold as cfg} from '../assets/js/cgf'
+import {insulated as cfg} from '../assets/js/cgf'
 import {thicknessValidators} from '../use/validators.js'
+import {calculateMaterial} from '../use/calculate'
 //Вводные данные
 const length = ref();   //Длиинна
 const width = ref();    //Ширина
@@ -192,7 +193,37 @@ const submitHandle = async function (isFormCorrect){
 		.then(res => {
 			if (res)
 			{
+				calculatorVisibility.value = false; //Выключаем отображение формы
+
+				//Значения по дефолту
+				if (!height.value)
+				{
+					height.value = width.value / 2;
+				}
+			    if (!numberGates.value)
+				{
+					numberGates.value = cfg.limits.numberGates.min;
+				}
+			    if (!heightGates.value)
+				{
+					heightGates.value = cfg.limits.heightGates.min;
+				}
+			    if (!widthGates.value)
+				{
+					widthGates.value = cfg.limits.widthGates.min;
+				}
+				//для утпеленного ангара
+			    if (thicknessInsulation !== null && !thicknessInsulation.value)
+				{
+					thicknessInsulation.value = cfg.limits.thicknessInsulation.min;
+				}
 				
+				//Вычисление площади
+				S.value = length.value * width.value || 0;
+				
+
+				let res = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value, thicknessInsulation.value/1000);
+				console.log(res);
 
 			}
 		})

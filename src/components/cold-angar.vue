@@ -239,23 +239,7 @@ const submitHandle = async function (isFormCorrect){
 				
 				//Вычисление площади
 				S.value = length.value * width.value || 0;
-				/*
-				//рассчет количества свай для фундамента
-				amount.value.push({
-					numberPile: {
-						title: 'Свая винтовая 3м',
-						amount: 0,
-						price: 0,
-						cost: 0,
-						units: 'шт.'
-					}
-				})
-				//Количество свай фундамента
-                numberPile.value = Math.floor( ((length.value + width.value) * 2 - summaryGateWidth) / cfg.def.pilesDistance );
-				numberPile.value = (length.value % cfg.def.pilesDistance > 1)
-					? numberPile.value + 2 //добавить по одной свае на углы при нехватке
-					: numberPile.value;
-				*/
+				
 
 				let res = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value);
 				console.log(res);

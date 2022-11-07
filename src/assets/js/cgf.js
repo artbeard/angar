@@ -25,6 +25,10 @@ export const cold = {
             min: 3,
             max: 5
         },
+        // thicknessInsulation: {
+        //     min: 150,
+        //     max: 350
+        // },
     },
 
     const: {
@@ -73,7 +77,7 @@ export const cold = {
         //Утеплитель
         mineralWool: {
             title: 'Минеральная вата',
-            weight: 150
+            weight: 100
         },
         //Сваи
         pile_3: {
@@ -88,20 +92,6 @@ export const cold = {
         
     },
 
-    //Устаревшее
-    weight: {
-        //Уголок
-        angle100x100x7: 10.79, //метр погонный
-        //Сталь
-        steel_15: 11.78,
-        steel_12: 9.42,
-        steel_08: 6.28,
-        //Профильная труба
-        profilePipe100x100x4: 11.8,
-        profilePipe50x50x4: 5.56,
-        //Арматура
-        fitting_d12: 0.888,
-    },
 }
 
 export const insulated = {

@@ -1,4 +1,3 @@
-
 // const length = ref();   //Длиинна
 // const width = ref();    //Ширина
 // const height = ref();   //Высота
@@ -11,18 +10,8 @@
 
 function calculateMaterial(cfg, length, width, height, numberGates, heightGates, widthGates, thicknessInsulation = null)
 {
-    const amount = [
-        // name: {
-        // 	title: '',
-        // 	amount: 0,
-        // 	price: 0,
-        // 	cost: 0,
-        // 	units: 'т'
-        // }
-    ];
+    const amount = [];
 
-    
-    
     //Рассчет металла на купол
     function domeMetallWeight(length, height, width, thicknessInsulation = null)
     {
@@ -51,7 +40,8 @@ function calculateMaterial(cfg, length, width, height, numberGates, heightGates,
         EndMetalWeight = cfg.material.steel_08.weight * S_end;
         if (thicknessInsulation !== null)
         {
-            VolumeInsulation = length * thicknessInsulation * L_stripe / 1000; //с переводом мм в м
+            VolumeInsulation = length * thicknessInsulation * L_stripe + S_end * thicknessInsulation;
+            console.log(VolumeInsulation, L_stripe, length, height, width, thicknessInsulation)
         }
         return [domeMetalWeight, EndMetalWeight, VolumeInsulation];
     }
@@ -67,7 +57,7 @@ function calculateMaterial(cfg, length, width, height, numberGates, heightGates,
         amount.push({
             mineralWool: {
                 title: cfg.material.mineralWool.title,
-                amount: +( VolumeInsulation * cfg.material.mineralWool.weight * cfg.const.safetyFactor / 1000).toFixed(2),
+                amount: +( VolumeInsulation * cfg.const.safetyFactor * cfg.material.mineralWool.weight / 1000).toFixed(2),
                 units: 'т'
             }
         })
