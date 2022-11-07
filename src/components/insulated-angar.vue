@@ -91,7 +91,7 @@
 			</div>
 
             <div class="col-12 col-lg-6 mb-3">
-				<label for="thicknessInsulation" class="pb-1">Толщина утепления</label>
+				<label for="thicknessInsulation" class="pb-1">Толщина утепления, мм</label>
 				<InputText id="thicknessInsulation" class="w-100"
 				   v-model.number="thicknessInsulation"
 				   type="number"

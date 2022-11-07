@@ -113,6 +113,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
 import {cold as cfg} from '../assets/js/cgf'
 import {coldValidators} from '../use/validators.js'
+import {calculateMaterial} from '../use/calculate'
 //Вводные данные
 const length = ref();   //Длиинна
 const width = ref();    //Ширина
@@ -141,6 +142,16 @@ const rules = computed(() => ({
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates })
 
+
+const amount = ref([
+	// name: {
+	// 	title: '',
+	// 	amount: 0,
+	// 	price: 0,
+	// 	cost: 0,
+	// 	units: 'т'
+	// }
+])
 
 //Рассчет
 const S = ref(0); //площадь
@@ -195,16 +206,59 @@ const amountMaterialTotal = ref(0);
 const amountWorklTotal = ref(0);
 
 
-
-
 const submitHandle = async function (isFormCorrect){
 	submitted.value = true;
 	isFormCorrect
 		.then(res => {
 			if (res)
 			{
-				
+				calculatorVisibility.value = false; //Выключаем отображение формы
 
+				//Значения по дефолту
+				if (!height.value)
+				{
+					height.value = width.value / 2;
+				}
+			    if (!numberGates.value)
+				{
+					numberGates.value = cfg.limits.numberGates.min;
+				}
+			    if (!heightGates.value)
+				{
+					heightGates.value = cfg.limits.heightGates.min;
+				}
+			    if (!widthGates.value)
+				{
+					widthGates.value = cfg.limits.widthGates.min;
+				}
+				// для утпеленного ангара
+			    // if (thicknessInsulation !== null && !thicknessInsulation.value)
+				// {
+				// 	thicknessInsulation.value = cfg.limits.thicknessInsulation.min;
+				// }
+				
+				//Вычисление площади
+				S.value = length.value * width.value || 0;
+				/*
+				//рассчет количества свай для фундамента
+				amount.value.push({
+					numberPile: {
+						title: 'Свая винтовая 3м',
+						amount: 0,
+						price: 0,
+						cost: 0,
+						units: 'шт.'
+					}
+				})
+				//Количество свай фундамента
+                numberPile.value = Math.floor( ((length.value + width.value) * 2 - summaryGateWidth) / cfg.def.pilesDistance );
+				numberPile.value = (length.value % cfg.def.pilesDistance > 1)
+					? numberPile.value + 2 //добавить по одной свае на углы при нехватке
+					: numberPile.value;
+				*/
+
+				let res = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value);
+				console.log(res);
 			}
 		})
 	;
