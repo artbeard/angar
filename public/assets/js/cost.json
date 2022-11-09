@@ -1,0 +1,21 @@
+{
+    "materials": {
+      "angle100x100x7": 72500,
+      "steel_15": 73000,
+      "steel_12": 69000,
+      "steel_08": 65000,
+      "profilePipe100x100x4": 58900,
+      "profilePipe50x50x4": 58600,
+      "pile_3m": 3500,
+      "fitting_d12": 52400,
+      "concrete_m300": 5200
+    },
+    "works": {
+      "installation_piles_corner": 88462,
+      "fabrication_installation_dome": 39095,
+      "fabrication_installation_end_walls_gates": 73333,
+      "сoncreting_works": 6000,
+      "insulation_works": 6000,
+      "engineering_services": 533
+    }
+  }
