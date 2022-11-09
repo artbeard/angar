@@ -131,7 +131,7 @@ export default defineComponent({
 import { ref, reactive, computed, onMounted, onUnmounted, inject } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
-import {insulated as cfg} from '../assets/js/cgf'
+import {cfg} from '../assets/js/cgf'
 import {thicknessValidators} from '../use/validators.js'
 import {calculateMaterial} from '../use/calculate'
 //Вводные данные

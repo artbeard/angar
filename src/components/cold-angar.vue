@@ -111,9 +111,14 @@ export default defineComponent({
 import { ref, reactive, computed, onMounted, onUnmounted, inject } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
-import {cold as cfg} from '../assets/js/cgf'
-import {coldValidators} from '../use/validators.js'
-import {calculateMaterial} from '../use/calculate'
+import { cfg } from '../assets/js/cgf'
+import { coldValidators } from '../use/validators.js'
+import { calculateMaterial } from '../use/calculate'
+
+
+let Cost = {};
+fetch('/assets/js/cost.json').then(res => res.json()).then(data => {Cost = data})
+
 //Вводные данные
 const length = ref();   //Длиинна
 const width = ref();    //Ширина
@@ -142,65 +147,10 @@ const rules = computed(() => ({
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates })
 
-
-const amount = ref([
-	// name: {
-	// 	title: '',
-	// 	amount: 0,
-	// 	price: 0,
-	// 	cost: 0,
-	// 	units: 'т'
-	// }
-])
-
 //Рассчет
 const S = ref(0); //площадь
-const numberPile = ref(0); //Количесто свай (каждые 2,5 м)
-    
-const weightStrappingAngle = ref(0); //вес обвязочного уголка 10.79 мп
-const weightStripe = ref(0); //вес 1,2: 9,42 кг/м2
-const basementVolume = ref(0); //Объем бетона для фундамента
-const weightStripeEnd = ref(0); //вес 0.8
-
-const fittingWeight = ref(0); //Вес арматуры арматуры
-
-const weightProfilePipe100x100x4 = ref(0);
-const weightProfilePipe50x50x4 = ref(0);
-
-const fasteners = ref(0);
-const formwork = ref(0);
-
-const TotalPrice = ref(0);
-const TotalPricePerM = ref(0);
 
 
-const amountMaterial = reactive({
-    //фундамент
-	pile_3m: 0,
-	angle100x100x7: 0,
-	fitting_d12: 0,
-	concrete_m300: 0,
-    //купол
-    steel_12: 0,
-    steel_08: 0,
-    //Ворота
-    gate: 0,
-
-    //профильная труба
-    profilePipe100x100x4: 0,
-    profilePipe50x50x4: 0,
-
-    fasteners:0,
-    formwork: 0,
-});
-
-const amountWork = reactive({
-    installationPile: 115000,
-    installationDome: 703720,
-    installationBuildingEnd: 110000,
-    installationСoncret: 180000,
-    technicalServices: 320000,
-});
 
 const amountMaterialTotal = ref(0);
 const amountWorklTotal = ref(0);
@@ -212,7 +162,7 @@ const submitHandle = async function (isFormCorrect){
 		.then(res => {
 			if (res)
 			{
-				calculatorVisibility.value = false; //Выключаем отображение формы
+				//calculatorVisibility.value = false; //Выключаем отображение формы
 
 				//Значения по дефолту
 				if (!height.value)
@@ -240,7 +190,7 @@ const submitHandle = async function (isFormCorrect){
 				//Вычисление площади
 				S.value = length.value * width.value || 0;
 				
-
+				console.log(Cost);
 				let res = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value);
 				console.log(res);
 			}

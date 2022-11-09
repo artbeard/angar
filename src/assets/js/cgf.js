@@ -1,4 +1,4 @@
-export const cold = {
+export const cfg = {
     limits: {
         length: {
             min: 10,
@@ -25,10 +25,10 @@ export const cold = {
             min: 3,
             max: 5
         },
-        // thicknessInsulation: {
-        //     min: 150,
-        //     max: 350
-        // },
+        thicknessInsulation: {
+            min: 150,
+            max: 350
+        },
     },
 
     const: {
@@ -89,19 +89,56 @@ export const cold = {
             title: 'Бетон М250',
             weight: 0
         },
-        
+
+        //Рассчитвается отдельно
+        //Ворота
+        gate: {
+            title: 'Ворота',
+            weight: 0
+        },
+        //Крепеж
+        fasteners: {
+            title: 'Крпеж (саморезы, электроды и т.п.)',
+            weight: 0
+        },
+        //Оплаубка
+        formwork: {
+            title: 'Опалубка',
+            weight: 0
+        },
     },
 
-}
+    //Перечень работ для возведения
+    work: {
+        installation_piles_corner: {
+            title: 'Свай и уголка',
+            //за тонну
+        },
 
-export const insulated = {
-    ...cold,
-    limits: {
-        ...cold.limits,
-        //Толщина утпеления
-        thicknessInsulation: {
-            min: 150,
-            max: 350
+        fabrication_installation_dome: {
+            title: 'Изготовление и монтаж купола ангара',
+            //За тонну
+        },
+
+        fabrication_installation_end_walls_gates: {
+            title: 'Изготовление и монтаж тоцевых стен и ворот',
+            //За тонну
+        },
+
+        сoncreting_works: {
+            title: 'Работы по бетонированию',
+            //за куб
+        },
+
+        insulation_works: {
+            title: 'Работы по утеплению',
+            insulation: true,
+            //за тонну
+        },
+
+        engineering_services: {
+            title: 'Услуги техники (кран, люлька и т.п.)',
+            //за площадь
         }
     }
 }
