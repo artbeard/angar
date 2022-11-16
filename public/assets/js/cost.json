@@ -1,21 +1,40 @@
 {
+    "cost_m2": 4815,
     "materials": {
-      "angle100x100x7": 72500,
-      "steel_15": 73000,
-      "steel_12": 69000,
-      "steel_08": 65000,
-      "profilePipe100x100x4": 58900,
-      "profilePipe50x50x4": 58600,
-      "pile_3m": 3500,
-      "fitting_d12": 52400,
-      "concrete_m300": 5200
+        "angle100x100x7": 67000,
+
+        "steel_12": 75000,
+        "steel_10": 75000,
+        "steel_08": 75000,
+
+        "profilePipe100x100x4": 54000,
+        "profilePipe50x50x4": 56000,
+
+        "pile_3_pneumatic_hammer": 2500,
+
+        "gate_4x4": 68000,
+        "gate_insulate_4x4": 78000,
+
+        "fasteners": 55000,
+
+
+
+        "pile_3m": 3500,
+        "fitting_d12": 52400,
+        "concrete_m300": 5200
     },
-    "works": {
-      "installation_piles_corner": 88462,
-      "fabrication_installation_dome": 39095,
-      "fabrication_installation_end_walls_gates": 73333,
-      "сoncreting_works": 6000,
-      "insulation_works": 6000,
-      "engineering_services": 533
+    "work": {
+        "installation_pile_field": 2000,
+        "fabrication_installation_dome": 43244,
+        "fabrication_installation_end_walls": 43244,
+        "fabrication_installation_gates": 100000,
+        "engineering_services": 500,
+
+
+        "fabrication_installation_end_walls_gates": 73333,
+        "installation_piles_corner": 88462,
+        "сoncreting_works": 6000,
+        "insulation_works": 6000
+        
     }
   }

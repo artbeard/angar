@@ -62,7 +62,7 @@
 				</span>
 			</div>
 
-			<div class="col-12 col-lg-6 mb-3">
+			<!-- <div class="col-12 col-lg-6 mb-3">
 				<label for="heightGates" class="pb-1">Высота ворот</label>
 				<InputText id="heightGates" class="w-100"
 				   v-model.number="heightGates"
@@ -74,9 +74,9 @@
 						<small class="p-error">{{error.$message}}</small>
 					</span>
 				</span>
-			</div>
+			</div> -->
 
-			<div class="col-12 col-lg-6 mb-3">
+			<!-- <div class="col-12 col-lg-6 mb-3">
 				<label for="widthGates" class="pb-1">Ширина ворот</label>
 				<InputText id="widthGates" class="w-100"
 				   v-model.number="widthGates"
@@ -88,13 +88,95 @@
 						<small class="p-error">{{error.$message}}</small>
 					</span>
 				</span>
-			</div>
+			</div> -->
 
 			<div class="col-12 col-lg-6 mb-3">
 				<button type="submit" class="btn btn-primary">Рассчет</button>
 			</div>
 
 		</form>
+
+        <div class="row" _v-show="!calculatorVisibility">
+            <div class="col-12 pb-5">
+				<button type="button" class="btn btn-default" @click="calculatorVisibility = true">Вернуться к рассчету</button>
+                <button type="button" class="btn btn-primary" @click="printResult">Распечатать коммерческое предложение</button>
+			</div>
+			<div class="col-12">
+				<div class="container-fluid calculatedData fs-6">
+					<p class="text-center">Бескаркасный ангар холодный, {{S}} м<sup>2</sup> ({{length}}м x {{width}}м)</p>
+					<table class="table table-borderless">
+						<tbody>
+						<tr>
+							<td>
+								<!-- <img src="../assets/img/schema1.jpg" alt=""> -->
+							</td>
+							<td class="align-middle">
+								<b>Длинна</b>: {{length}}м<br>
+								<b>Ширина</b>: {{width}}м<br>
+								<b>Высота</b>: {{height}}м<br>
+								<b>Площадь</b>: {{S}}м<sup>2</sup>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+
+					<!-- <table class="table table-bordered table-sm caption-top calcData">
+						<caption class="text-center">
+							<b>Перечень используемых материалов</b>
+						</caption>
+						<thead>
+							<tr>
+								<th>Наименование</th>
+								<th>Количество</th>
+								<th>Цена</th>
+								<th>Стоимость</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(index, material) in costMaterial" :key="">
+								<td>Металл оцинкованный 1,2 мм</td>
+								<td>{{weightStripe}} т.</td>
+								<td>{{cfg.cost.steel_12}}</td>
+								<td>{{amountMaterial.steel_12}}</td>
+							</tr>
+							
+						<tfoot>
+							<tr>
+								<td colspan="3"><b>Итого</b></td>
+								<td><b>{{amountMaterialTotal}}</b></td>
+							</tr>
+						</tfoot>
+					</table> -->
+
+					<!-- <table class="table table-bordered table-sm caption-top calcData">
+						<caption class="text-center">
+							<b>Перечень работ</b>
+						</caption>
+						<thead>
+							<tr>
+								<th>Наименование</th>
+								<th>Стоимость</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Монтаж свай и уголка</td>
+								<td>{{amountWork.installationPile}}</td>
+							</tr>
+							
+						</tbody>
+						<tfoot>
+							<tr>
+								<td><b>Итого</b></td>
+								<td><b>{{amountWorklTotal}}</b></td>
+							</tr>
+						</tfoot>
+					</table>
+					<p class="text-center"><b>Обзая стоимость {{TotalPrice}} р. ({{TotalPricePerM}}р/1м<sup>2</sup>)</b></p> -->
+				</div>
+			</div>
+		</div>
+
 	</div>
 </template>
 <script>
@@ -113,7 +195,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
 import { cfg } from '../assets/js/cgf'
 import { coldValidators } from '../use/validators.js'
-import { calculateMaterial } from '../use/calculate'
+import { calculateMaterial, calculateCostMaterial, calculateCostWork } from '../use/calculate'
 
 
 let Cost = {};
@@ -124,8 +206,8 @@ const length = ref();   //Длиинна
 const width = ref();    //Ширина
 const height = ref();   //Высота
 const numberGates = ref();    // количество ворот
-const heightGates = ref();    //Высота ворот
-const widthGates = ref();     //Ширина ворот
+const heightGates = ref(cfg.const.heightGate);    //Высота ворот
+const widthGates = ref(cfg.const.widthGate);     //Ширина ворот
 
 const calculatorVisibility = ref(true);
 const submitted = ref(false);
@@ -163,7 +245,6 @@ const submitHandle = async function (isFormCorrect){
 			if (res)
 			{
 				//calculatorVisibility.value = false; //Выключаем отображение формы
-
 				//Значения по дефолту
 				if (!height.value)
 				{
@@ -190,9 +271,14 @@ const submitHandle = async function (isFormCorrect){
 				//Вычисление площади
 				S.value = length.value * width.value || 0;
 				
-				console.log(Cost);
-				let res = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value);
-				console.log(res);
+				//console.log(Cost);
+				let materialsAmount = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value);
+                //let costMaterial = ;
+                const costMaterial = ref(calculateCostMaterial(cfg, Cost, materialsAmount));
+                let costWorks = calculateCostWork(cfg, Cost, materialsAmount, numberGates.value, S.value, costMaterial.value.totalPrice);
+                let CostPerS = (costMaterial.totalPrice + costWorks.totalPrice) / S.value;
+				console.log(costMaterial, costWorks);
+                console.log('Итоговая цена за квадрат', CostPerS)
 			}
 		})
 	;

@@ -39,6 +39,7 @@ const coldValidators = {
 		)
 	},
 
+    /*
     heightGates: {
 		//required: helpers.withMessage('Поле обязательно к заполнению', required),
 		minValue: helpers.withMessage(
@@ -62,6 +63,7 @@ const coldValidators = {
 			maxValue(cfg.limits.widthGates.max)
 		)
 	},
+    */
 };
 
 const thicknessValidators = {

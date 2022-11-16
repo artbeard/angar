@@ -62,7 +62,7 @@
 				</span>
 			</div>
 
-			<div class="col-12 col-lg-6 mb-3">
+			<!-- <div class="col-12 col-lg-6 mb-3">
 				<label for="heightGates" class="pb-1">Высота ворот</label>
 				<InputText id="heightGates" class="w-100"
 				   v-model.number="heightGates"
@@ -74,9 +74,9 @@
 						<small class="p-error">{{error.$message}}</small>
 					</span>
 				</span>
-			</div>
+			</div> -->
 
-			<div class="col-12 col-lg-6 mb-3">
+			<!-- <div class="col-12 col-lg-6 mb-3">
 				<label for="widthGates" class="pb-1">Ширина ворот</label>
 				<InputText id="widthGates" class="w-100"
 				   v-model.number="widthGates"
@@ -88,7 +88,7 @@
 						<small class="p-error">{{error.$message}}</small>
 					</span>
 				</span>
-			</div>
+			</div> -->
 
             <div class="col-12 col-lg-6 mb-3">
 				<label for="thicknessInsulation" class="pb-1">Толщина утепления, мм</label>
@@ -139,8 +139,8 @@ const length = ref();   //Длиинна
 const width = ref();    //Ширина
 const height = ref();   //Высота
 const numberGates = ref();    // количество ворот
-const heightGates = ref();    //Высота ворот
-const widthGates = ref();     //Ширина ворот
+const heightGates = ref(cfg.const.heightGate);    //Высота ворот
+const widthGates = ref(cfg.const.widthGate);     //Ширина ворот
 const thicknessInsulation = ref(); //Толщина утепления
 
 const calculatorVisibility = ref(true);
