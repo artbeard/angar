@@ -108,25 +108,9 @@ export const cfg = {
         //Утеплитель
         mineralWool: {
             title: 'Минеральная вата',
-            weight: 35
+            weight: 10
         },
 
-        //урбано из расчета
-        //Оплаубка
-        formwork: {
-            title: 'Опалубка',
-            weight: 0
-        },
-        //Бетон
-        concrete_m250: {
-            title: 'Бетон М250',
-            weight: 0
-        },
-        //Арматура
-        fitting_d12: {
-            title: 'Арматура 12 мм',
-            weight: 0.888
-        },
     },
 
     //Перечень работ для возведения
@@ -151,18 +135,5 @@ export const cfg = {
             //за площадь
         },
 
-
-        
-        //Убрать из расчета
-        сoncreting_works: {
-            title: 'Работы по бетонированию',
-            //за куб
-        },
-
-        insulation_works: {
-            title: 'Работы по утеплению',
-            insulation: true,
-            //за тонну
-        },
     }
 }

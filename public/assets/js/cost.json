@@ -1,5 +1,7 @@
 {
     "cost_m2": 4815,
+    "cost_insulate_m2": 9630,
+
     "materials": {
         "angle100x100x7": 67000,
 
@@ -17,24 +19,14 @@
 
         "fasteners": 55000,
 
+        "mineralWool": 1500
 
-
-        "pile_3m": 3500,
-        "fitting_d12": 52400,
-        "concrete_m300": 5200
     },
     "work": {
         "installation_pile_field": 2000,
         "fabrication_installation_dome": 43244,
-        "fabrication_installation_end_walls": 43244,
-        "fabrication_installation_gates": 100000,
-        "engineering_services": 500,
-
-
-        "fabrication_installation_end_walls_gates": 73333,
-        "installation_piles_corner": 88462,
-        "сoncreting_works": 6000,
-        "insulation_works": 6000
-        
+        "fabrication_installation_end_walls": 43000,
+        "fabrication_installation_gates": 70000,
+        "engineering_services": 500
     }
   }
