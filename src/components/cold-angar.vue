@@ -108,14 +108,14 @@
 							<tr v-for="material in costMaterial.materials" :key="'m_tbl_index' + material.material">
 								<td>{{material.title}}</td>
 								<td>{{material.amount}} {{material.units}}</td>
-								<td>{{material.cost}}</td>
-								<td>{{material.price}}</td>
+								<td>{{ (material.cost).toLocaleString() }}</td>
+								<td>{{ (material.price).toLocaleString() }}</td>
 							</tr>
 						</tbody>	
 						<tfoot>
 							<tr>
 								<td colspan="3"><b>Итого</b></td>
-								<td><b>{{costMaterial.totalPrice}}</b></td>
+								<td><b>{{ (costMaterial.totalPrice).toLocaleString() }}</b></td>
 							</tr>
 						</tfoot>
 					</table>
@@ -133,17 +133,17 @@
 						<tbody>
 							<tr v-for="work in costWorks.works" :key="'w_tbl_index'+work.work">
 								<td>{{work.title}}</td>
-								<td>{{work.cost}}</td>
+								<td>{{ (work.cost).toLocaleString() }}</td>
 							</tr>
 						</tbody>
 						<tfoot>
 							<tr>
 								<td><b>Итого</b></td>
-								<td><b>{{costWorks.totalPrice}}</b></td>
+								<td><b>{{ (costWorks.totalPrice).toLocaleString() }}</b></td>
 							</tr>
 						</tfoot>
 					</table>
-					<p class="text-center"><b>Общая стоимость {{TotalPrice}} р. ({{TotalPricePerM}} руб./1м<sup>2</sup>)</b></p>
+					<p class="text-center"><b>Общая стоимость {{ (TotalPrice).toLocaleString() }} р. ({{ (TotalPricePerM).toLocaleString() }} руб./м<sup>2</sup>)</b></p>
 				</div>
 			</div>
 		</div>
@@ -175,7 +175,7 @@ import { calculateMaterial, calculateCostMaterial, calculateCostWork } from '../
 
 //Загрузка стоимости материалов и работ с сервера
 let Cost = {};
-fetch('/assets/js/cost.json')
+fetch('/assets/js/cost.json?' + (Date.now()))
 	.then(res => res.json())
 	.then(data => {Cost = data})
 
@@ -265,8 +265,8 @@ const submitHandle = async function (isFormCorrect){
 				let materialsAmount = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value);
 				costMaterial.value = calculateCostMaterial(cfg, Cost, materialsAmount);
 				costWorks.value = calculateCostWork(cfg, Cost, materialsAmount, numberGates.value, S.value, costMaterial.value.totalPrice);
-				TotalPrice.value = costMaterial.value.totalPrice + costWorks.value.totalPrice;
-				TotalPricePerM.value = TotalPrice.value / S.value;
+				TotalPrice.value = +( costMaterial.value.totalPrice + costWorks.value.totalPrice ).toFixed(2);
+				TotalPricePerM.value = +( TotalPrice.value / S.value).toFixed(2);
 			}
 		});
 }
