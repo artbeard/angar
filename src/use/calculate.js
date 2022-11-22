@@ -222,7 +222,7 @@ function calculateCostMaterial(cfg, cost, materials, thicknessInsulation = null)
 	})
 
 	return {
-		totalPrice,
+		totalPrice: +(totalPrice).toFixed(2),
 		materials: countedMaterials
 	};
 }
@@ -266,7 +266,7 @@ function calculateCostWork(cfg, cost, materials, numberGates, S, materialPrice, 
 	//Услуги техники
 	amount.push({
 		...cfg.work.engineering_services,
-		cost: Math.round(cost.work.engineering_services * S)
+		cost: Math.round(cost.work.engineering_services * S * (thicknessInsulation ? 2 : 1))
 	})
 	
 	//сбрка и монтаж купола
@@ -289,7 +289,7 @@ function calculateCostWork(cfg, cost, materials, numberGates, S, materialPrice, 
 	workPrice = getWorkTotlaPrice();
 
 	return {
-		totalPrice: workPrice,
+		totalPrice: +(workPrice).toFixed(2),
 		works: amount
 	};
 }
