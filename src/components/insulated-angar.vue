@@ -1,6 +1,21 @@
 <template lang="">
     <div class="container">
-		<form @submit.prevent="submitHandle(v$.$validate())" class="row" v-show="calculatorVisibility">
+		<div v-if="loading">
+            <div class="text-center my-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="my-3">Загрузка</p>
+            </div>
+        </div>
+
+        <div v-else-if="loadingError !== null">
+            <div class="text-center my-5">
+                <p class="my-3">{{loadingError}}</p>
+            </div>
+        </div>
+
+		<form v-else @submit.prevent="submitHandle(v$.$validate())" class="row" v-show="calculatorVisibility">
 			<div class="col-12 mb-3">
 				<p>Введите желаемые параметры. Обязательными к заполнению являются поля формы, помеченные звездочкой (*).</p>
 			</div>
@@ -121,7 +136,7 @@
 								<th>Наименование</th>
 								<th>Количество</th>
 								<th>Цена</th>
-								<th>Стоимость</th>
+								<th width="16%">Стоимость</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -147,7 +162,7 @@
 						<thead>
 							<tr>
 								<th>Наименование</th>
-								<th>Стоимость</th>
+								<th width="16%">Стоимость</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -174,6 +189,7 @@
 import { defineComponent } from 'vue'
 import InputText from 'primevue/inputtext';
 import printMixin from '@/mixins/print'
+import urls from '@/use/urls'
 export default defineComponent({
 	name: 'insulatedAngar',
 	components:{
@@ -193,11 +209,21 @@ import { cfg } from '../assets/js/cgf'
 import { thicknessValidators } from '../use/validators.js'
 import { calculateMaterial, calculateCostMaterial, calculateCostWork } from '../use/calculate'
 
+const loading = ref(true);
+const loadingError = ref(null);
 //Загрузка стоимости материалов и работ с сервера
 let Cost = {};
-fetch('/assets/js/cost.json?' + (Date.now()))
+fetch( urls.costUrl, {method: 'GET', cache: 'no-cache'})
 	.then(res => res.json())
-	.then(data => {Cost = data})
+	.then(data => {
+        Cost = data;
+        loading.value = false;
+    })
+    .catch(err => {
+        console.log((err));
+        loadingError.value = 'Не удалось загрузить цены поставщиков. Попробуйте позже.'
+        loading.value = false;
+    });
     
 //Вводные данные
 const length = ref();   //Длиинна
