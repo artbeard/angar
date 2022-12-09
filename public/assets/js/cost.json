@@ -5,19 +5,22 @@
     "materials": {
         "angle100x100x7": 68950,
 
+        "profilePipe100x100x4": 69550,
+        "profilePipe50x50x4": 57800,
+
         "steel_12": 79500,
         "steel_10": 78500,
         "steel_08": 79650,
 
-        "profilePipe100x100x4": 69550,
-        "profilePipe50x50x4": 57800,
 
         "pile_3_pneumatic_hammer": 2500,
 
+        "fasteners": 55000,
+        
         "gate_4x4": 68000,
         "gate_insulate_4x4": 78000,
 
-        "fasteners": 55000,
+        
 
         "mineralWool": 280000
 

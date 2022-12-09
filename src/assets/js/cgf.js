@@ -1,7 +1,7 @@
 export const cfg = {
     limits: {
         length: {
-            min: 10,
+            min: 20,
             max: 100
         },
         width: {
