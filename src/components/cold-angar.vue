@@ -55,6 +55,7 @@
 				<InputText id="height" class="w-100"
 					v-model.number="height"
 					type="number"
+                    step="0.01"
 					:class="{'p-invalid' : submitted && v$.height.$invalid }"
 				/>
 				<span v-if="submitted && (v$.height.$error || v$.height.$invalid)">
@@ -187,7 +188,7 @@ import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, helpers } from '@vuelidate/validators'
 import { cfg } from '../assets/js/cgf'
-import { coldValidators } from '../use/validators.js'
+import { coldValidators, widthtLessHeigh } from '../use/validators.js'
 import { calculateMaterial, calculateCostMaterial, calculateCostWork } from '../use/calculate'
 
 const loading = ref(true);
@@ -217,20 +218,27 @@ const widthGates = ref(cfg.const.widthGate);     //Ширина ворот
 const calculatorVisibility = ref(true);
 const submitted = ref(false);
 
+
 const rules = computed(() => ({
 	...coldValidators,
 	height: {
 		//required: helpers.withMessage('Поле обязательно к заполнению', required),
 		minValue: helpers.withMessage(
-			({$params}) => `Минимальная высота строения должна быть не менее ${$params.min} м`,
+			({$params}) => `Минимальная высота строения должна быть не менее ${$params.min} м. `,
 			minValue(cfg.limits.height.min)
 		),
 		maxValue: helpers.withMessage(
-			({$params}) => `Максимальная высота строения должна быть не более половины ширины - ${$params.max} м`,
-			//maxValue(cfg.limits.height.max)
+			({$params}) => `Максимальная высота строения должна быть не более половины ширины - ${$params.max} м. `,
 			maxValue(+(width.value/2).toFixed(2))
 		)
 	},
+    width:{
+        ...coldValidators.width,
+        heightWidth: helpers.withMessage(
+			({$params}) => `Максимальная ширина не должна быть более длинны - ${length.value} м. `,
+			widthtLessHeigh(length)
+		)
+    }
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates })
 

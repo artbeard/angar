@@ -204,9 +204,9 @@ export default defineComponent({
 <script setup>
 import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
+import { minValue, maxValue, helpers } from '@vuelidate/validators'
 import { cfg } from '../assets/js/cgf'
-import { thicknessValidators } from '../use/validators.js'
+import { thicknessValidators, widthtLessHeigh } from '../use/validators.js'
 import { calculateMaterial, calculateCostMaterial, calculateCostWork } from '../use/calculate'
 
 const loading = ref(true);
@@ -241,17 +241,22 @@ const submitted = ref(false);
 const rules = computed(() => ({
     ...thicknessValidators,
     height: {
-		//required: helpers.withMessage('Поле обязательно к заполнению', required),
 		minValue: helpers.withMessage(
 			({$params}) => `Минимальная высота строения должна быть не менее ${$params.min} м`,
 			minValue(cfg.limits.height.min)
 		),
 		maxValue: helpers.withMessage(
 			({$params}) => `Максимальная высота строения должна быть не более половины ширины - ${$params.max} м`,
-			//maxValue(cfg.limits.height.max)
 			maxValue(+(width.value/2).toFixed(2))
 		)
 	},
+    width:{
+        ...thicknessValidators.width,
+        heightWidth: helpers.withMessage(
+			({$params}) => `Максимальная ширина не должна быть более длинны - ${length.value} м. `,
+			widthtLessHeigh(length)
+		)
+    }
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates, thicknessInsulation })
 
