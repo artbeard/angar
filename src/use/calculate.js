@@ -251,11 +251,7 @@ function calculateCostWork(cfg, cost, materials, numberGates, S, materialPrice, 
 		}
 	})
 	
-	//стены и ворота
-	amount.push({
-		...cfg.work.fabrication_installation_end_walls_gates,
-		cost: Math.round(cost.work.fabrication_installation_end_walls * endWeight + cost.work.fabrication_installation_gates * numberGates)
-	})
+	
 	
 	//монтаж свай
 	amount.push({
@@ -269,18 +265,40 @@ function calculateCostWork(cfg, cost, materials, numberGates, S, materialPrice, 
 		cost: Math.round(cost.work.engineering_services * S * (thicknessInsulation ? 2 : 1))
 	})
 	
+    //стены и ворота
+    /*
+	amount.push({
+		...cfg.work.fabrication_installation_end_walls_gates,
+		cost: Math.round(cost.work.fabrication_installation_end_walls * endWeight + cost.work.fabrication_installation_gates * numberGates)
+	})
+    */
+    let cost_gates = cost.work.fabrication_installation_gates * numberGates;
+
 	//сбрка и монтаж купола
 	let fabrication_installation_dome_cost = Math.round(cost.work.fabrication_installation_dome * domeWeight);
 	
 	const getWorkTotlaPrice = () => {
-		return amount.reduce((acc, el) => { return acc += el.cost }, 0);
+        //  +cost_gates
+		return amount.reduce((acc, el) => { return acc += el.cost }, 0); //0
 	}
 
-	let workPrice = getWorkTotlaPrice();
-	let totalPrice = materialPrice + workPrice;
-	let fairPrice = S * (thicknessInsulation == null ? cost.cost_m2 : cost.cost_insulate_m2);
+	let workPrice = getWorkTotlaPrice() + cost_gates; //Цена работ
+	let totalPrice = materialPrice + workPrice; //Цена всего ангара
+	let fairPrice = S * (thicknessInsulation == null ? cost.cost_m2 : cost.cost_insulate_m2); //Настоящая цена (от площади)
 	
-	fabrication_installation_dome_cost = fairPrice - totalPrice;
+    let fabrication_installation_dome_and_endwals_cost = fairPrice - totalPrice; //цена на монтаж купола и торцевых стен
+
+	//fabrication_installation_dome_cost = fairPrice - totalPrice;
+    fabrication_installation_dome_cost = Math.round(2 * fabrication_installation_dome_and_endwals_cost / 3);
+    let fabrication_installation_end_walls = Math.round(fabrication_installation_dome_and_endwals_cost / 3);
+    
+    //монтаж тоцевых стен
+    amount.push({
+		...cfg.work.fabrication_installation_end_walls_gates,
+		cost: Math.round(fabrication_installation_end_walls + cost.work.fabrication_installation_gates * numberGates)
+	})
+
+    //Монтаж купола
 	amount.push({
 		...cfg.work.fabrication_installation_dome,
 		cost: Math.round(fabrication_installation_dome_cost)
