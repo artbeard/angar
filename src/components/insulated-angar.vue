@@ -1,6 +1,21 @@
 <template lang="">
     <div class="container">
-		<form @submit.prevent="submitHandle(v$.$validate())" class="row" v-show="calculatorVisibility">
+		<div v-if="loading">
+            <div class="text-center my-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="my-3">Загрузка</p>
+            </div>
+        </div>
+
+        <div v-else-if="loadingError !== null">
+            <div class="text-center my-5">
+                <p class="my-3">{{loadingError}}</p>
+            </div>
+        </div>
+
+		<form v-else @submit.prevent="submitHandle(v$.$validate())" class="row" v-show="calculatorVisibility">
 			<div class="col-12 mb-3">
 				<p>Введите желаемые параметры. Обязательными к заполнению являются поля формы, помеченные звездочкой (*).</p>
 			</div>
@@ -62,34 +77,6 @@
 				</span>
 			</div>
 
-			<!-- <div class="col-12 col-lg-6 mb-3">
-				<label for="heightGates" class="pb-1">Высота ворот</label>
-				<InputText id="heightGates" class="w-100"
-				   v-model.number="heightGates"
-				   type="number"
-				   :class="{'p-invalid' : submitted && v$.heightGates.$invalid }"
-				/>
-				<span v-if="submitted && (v$.heightGates.$error || v$.heightGates.$invalid)">
-					<span id="length-error" v-for="(error, index) of v$.heightGates.$silentErrors" :key="index">
-						<small class="p-error">{{error.$message}}</small>
-					</span>
-				</span>
-			</div> -->
-
-			<!-- <div class="col-12 col-lg-6 mb-3">
-				<label for="widthGates" class="pb-1">Ширина ворот</label>
-				<InputText id="widthGates" class="w-100"
-				   v-model.number="widthGates"
-				   type="number"
-				   :class="{'p-invalid' : submitted && v$.widthGates.$invalid }"
-				/>
-				<span v-if="submitted && (v$.widthGates.$error || v$.widthGates.$invalid)">
-					<span id="length-error" v-for="(error, index) of v$.widthGates.$silentErrors" :key="index">
-						<small class="p-error">{{error.$message}}</small>
-					</span>
-				</span>
-			</div> -->
-
             <div class="col-12 col-lg-6 mb-3">
 				<label for="thicknessInsulation" class="pb-1">Толщина утепления, мм</label>
 				<InputText id="thicknessInsulation" class="w-100"
@@ -114,26 +101,130 @@
 			</div>
 
 		</form>
+
+        <div class="row" v-show="!calculatorVisibility">
+			<div class="col-12 pb-5">
+				<button type="button" class="btn btn-default" @click="calculatorVisibility = true"><i class="fas mx-1 fa-arrow-left"></i> Вернуться к рассчету</button>
+				<button type="button" class="btn btn-success" @click="printResult('.calculatedDataInsulated')"><i class="fas mx-1 fa-print"></i>Распечатать коммерческое предложение</button>
+			</div>
+			<div class="col-12">
+				<div class="container-fluid calculatedDataInsulated fs-6">
+					<p class="text-center">Бескаркасный ангар утепленный, {{S}} м<sup>2</sup> ({{length}}м x {{width}}м)</p>
+					<table class="table table-borderless">
+						<tbody>
+						<tr>
+							<td>
+								<img src="../assets/img/insulated-angar-schema.jpg" height="160" alt="">
+							</td>
+							<td class="align-middle">
+								<b>Длинна</b> (B): {{length}}м<br>
+								<b>Ширина</b> (L): {{width}}м<br>
+								<b>Высота</b> (H): {{height}}м<br>
+                                <b>Толщина утепления</b> (M): {{thicknessInsulation}}мм<br>
+								<b>Площадь</b>: {{S}}м<sup>2</sup>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+
+					<table class="table table-bordered table-sm caption-top calcData">
+						<caption class="text-center">
+							<b>Перечень используемых материалов</b>
+						</caption>
+						<thead>
+							<tr>
+								<th>Наименование</th>
+								<th>Количество</th>
+								<th>Цена</th>
+								<th width="16%">Стоимость</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="material in costMaterial.materials" :key="'m_tbl_index' + material.material">
+								<td>{{material.title}}</td>
+								<td>{{material.amount}} {{material.units}}</td>
+								<td>{{ (material.cost).toLocaleString() }}</td>
+								<td>{{ (material.price).toLocaleString() }}</td>
+							</tr>
+						</tbody>	
+						<tfoot>
+							<tr>
+								<td colspan="3"><b>Итого</b></td>
+								<td><b>{{ (costMaterial.totalPrice).toLocaleString() }}</b></td>
+							</tr>
+						</tfoot>
+					</table>
+
+					<table class="table table-bordered table-sm caption-top calcData">
+						<caption class="text-center">
+							<b>Перечень работ</b>
+						</caption>
+						<thead>
+							<tr>
+								<th>Наименование</th>
+								<th width="16%">Стоимость</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="work in costWorks.works" :key="'w_tbl_index'+work.work">
+								<td>{{work.title}}</td>
+								<td>{{ (work.cost).toLocaleString() }}</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td><b>Итого</b></td>
+								<td><b>{{ (costWorks.totalPrice).toLocaleString() }}</b></td>
+							</tr>
+						</tfoot>
+					</table>
+					<p class="text-center"><b>Общая стоимость {{ (TotalPrice).toLocaleString() }} р. ({{ (TotalPricePerM).toLocaleString() }} руб./м<sup>2</sup>)</b></p>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </template>
 <script>
 import { defineComponent } from 'vue'
 import InputText from 'primevue/inputtext';
-import { coldValidators } from '@/use/validators'
+import printMixin from '@/mixins/print'
+import urls from '@/use/urls'
 export default defineComponent({
-    name: 'insulatedAngar',
-    components: {
-        InputText
-    }
+	name: 'insulatedAngar',
+	components:{
+		InputText
+	},
+	mixins: [printMixin],
+	data: ()=>({
+		printTitle: 'Коммерческое предлоежение от ООО Сибангар - Ангар бескаркасный утепленный',
+	}),
 })
 </script>
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, inject } from 'vue'
+import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
-import {cfg} from '../assets/js/cgf'
-import {thicknessValidators} from '../use/validators.js'
-import {calculateMaterial} from '../use/calculate'
+import { minValue, maxValue, helpers } from '@vuelidate/validators'
+import { cfg } from '../assets/js/cgf'
+import { thicknessValidators, widthtLessHeigh } from '../use/validators.js'
+import { calculateMaterial, calculateCostMaterial, calculateCostWork } from '../use/calculate'
+
+const loading = ref(true);
+const loadingError = ref(null);
+//Загрузка стоимости материалов и работ с сервера
+let Cost = {};
+fetch( urls.costUrl, {method: 'GET', cache: 'no-cache'})
+	.then(res => res.json())
+	.then(data => {
+        Cost = data;
+        loading.value = false;
+    })
+    .catch(err => {
+        console.log((err));
+        loadingError.value = 'Не удалось загрузить цены поставщиков. Попробуйте позже.'
+        loading.value = false;
+    });
+    
 //Вводные данные
 const length = ref();   //Длиинна
 const width = ref();    //Ширина
@@ -150,42 +241,46 @@ const submitted = ref(false);
 const rules = computed(() => ({
     ...thicknessValidators,
     height: {
-		//required: helpers.withMessage('Поле обязательно к заполнению', required),
 		minValue: helpers.withMessage(
 			({$params}) => `Минимальная высота строения должна быть не менее ${$params.min} м`,
 			minValue(cfg.limits.height.min)
 		),
 		maxValue: helpers.withMessage(
 			({$params}) => `Максимальная высота строения должна быть не более половины ширины - ${$params.max} м`,
-			//maxValue(cfg.limits.height.max)
 			maxValue(+(width.value/2).toFixed(2))
 		)
 	},
+    width:{
+        ...thicknessValidators.width,
+        heightWidth: helpers.withMessage(
+			({$params}) => `Максимальная ширина не должна быть более длинны - ${length.value} м. `,
+			widthtLessHeigh(length)
+		)
+    }
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates, thicknessInsulation })
 
 //Рассчет
 const S = ref(0); //площадь
-const numberPile = ref(0); //Количесто свай (каждые 2,5 м)
-    
-const weightStrappingAngle = ref(0); //вес обвязочного уголка 10.79 мп
-const weightStripe = ref(0); //вес 1,2: 9,42 кг/м2
-const basementVolume = ref(0); //Объем бетона для фундамента
-const weightStripeEnd = ref(0); //вес 0.8
-
-const fittingWeight = ref(0); //Вес арматуры арматуры
-
-const weightProfilePipe100x100x4 = ref(0);
-const weightProfilePipe50x50x4 = ref(0);
-
-const fasteners = ref(0);
-const formwork = ref(0);
-
+//Общая стоимость проекта
 const TotalPrice = ref(0);
+//Общая цена за 1м2
 const TotalPricePerM = ref(0);
 
-
-//const amountMaterial = 
+//перечень и стоимость материалов
+const costMaterial = ref(
+	{
+		totalPrice: 0,
+		materials: []
+	}
+);
+//Перечеень и стоимость работ
+const costWorks = ref(
+	{
+		totalPrice: 0,
+		works: []
+	}
+);
 
 const submitHandle = async function (isFormCorrect){
 	submitted.value = true;
@@ -194,26 +289,25 @@ const submitHandle = async function (isFormCorrect){
 			if (res)
 			{
 				calculatorVisibility.value = false; //Выключаем отображение формы
-
 				//Значения по дефолту
 				if (!height.value)
 				{
 					height.value = width.value / 2;
 				}
-			    if (!numberGates.value)
+				if (!numberGates.value)
 				{
 					numberGates.value = cfg.limits.numberGates.min;
 				}
-			    if (!heightGates.value)
+				if (!heightGates.value)
 				{
 					heightGates.value = cfg.limits.heightGates.min;
 				}
-			    if (!widthGates.value)
+				if (!widthGates.value)
 				{
 					widthGates.value = cfg.limits.widthGates.min;
 				}
-				//для утпеленного ангара
-			    if (thicknessInsulation !== null && !thicknessInsulation.value)
+				// для утпеленного ангара
+				if (thicknessInsulation !== null && !thicknessInsulation.value)
 				{
 					thicknessInsulation.value = cfg.limits.thicknessInsulation.min;
 				}
@@ -221,9 +315,13 @@ const submitHandle = async function (isFormCorrect){
 				//Вычисление площади
 				S.value = length.value * width.value || 0;
 				
-
-				let res = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value, thicknessInsulation.value/1000);
-				console.log(res);
+                let materialsAmount = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value, thicknessInsulation.value);
+				costMaterial.value = calculateCostMaterial(cfg, Cost, materialsAmount, thicknessInsulation.value);
+				costWorks.value = calculateCostWork(cfg, Cost, materialsAmount, numberGates.value, S.value, costMaterial.value.totalPrice, thicknessInsulation.value);
+				// TotalPrice.value = costMaterial.value.totalPrice + costWorks.value.totalPrice;
+				// TotalPricePerM.value = TotalPrice.value / S.value;
+                TotalPrice.value = +( costMaterial.value.totalPrice + costWorks.value.totalPrice ).toFixed(2);
+				TotalPricePerM.value = +( TotalPrice.value / S.value).toFixed(2);
 
 			}
 		})
