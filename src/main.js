@@ -6,5 +6,5 @@ import "primevue/resources/themes/bootstrap4-light-blue/theme.css"
 import "primevue/resources/primevue.min.css"
 
 createApp(App)
-    .use(PrimeVue)
-    .mount('#app')
+   .use(PrimeVue)
+   .mount('#app')

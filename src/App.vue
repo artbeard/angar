@@ -44,7 +44,6 @@
 		</template>
 	</print-result>
 </template>
-
 <script>
 import { defineComponent, defineAsyncComponent, markRaw } from 'vue'
 import TabView from 'primevue/tabview';
@@ -74,7 +73,6 @@ export default defineComponent({
 	}),
 })
 </script>
-
 <style lang="scss" scoped>
 .tabview-custom {
 	i, span {
@@ -85,7 +83,6 @@ export default defineComponent({
 		margin: 0 .5rem;
 	}
 }
-
 .p-tabview p {
 	line-height: 1.5;
 	margin: 0;

@@ -1,20 +1,20 @@
 <template lang="">
 	<div class="container">
 
-        <div v-if="loading">
-            <div class="text-center my-5">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="my-3">Загрузка</p>
-            </div>
-        </div>
+		<div v-if="loading">
+			<div class="text-center my-5">
+				<div class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+				<p class="my-3">Загрузка</p>
+			</div>
+		</div>
 
-        <div v-else-if="loadingError !== null">
-            <div class="text-center my-5">
-                <p class="my-3">{{loadingError}}</p>
-            </div>
-        </div>
+		<div v-else-if="loadingError !== null">
+			<div class="text-center my-5">
+				<p class="my-3">{{loadingError}}</p>
+			</div>
+		</div>
 
 		<form v-else @submit.prevent="submitHandle(v$.$validate())" class="row" v-show="calculatorVisibility">
 			<div class="col-12 mb-3">
@@ -55,7 +55,7 @@
 				<InputText id="height" class="w-100"
 					v-model.number="height"
 					type="number"
-                    step="0.01"
+					step="0.01"
 					:class="{'p-invalid' : submitted && v$.height.$invalid }"
 				/>
 				<span v-if="submitted && (v$.height.$error || v$.height.$invalid)">
@@ -164,7 +164,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </template>
 <script>
@@ -198,14 +197,14 @@ let Cost = {};
 fetch( urls.costUrl, {method: 'GET', cache: 'no-cache'})
 	.then(res => res.json())
 	.then(data => {
-        Cost = data;
-        loading.value = false;
-    })
-    .catch(err => {
-        console.log((err));
-        loadingError.value = 'Не удалось загрузить цены поставщиков. Попробуйте позже.'
-        loading.value = false;
-    });
+		Cost = data;
+		loading.value = false;
+	})
+	.catch(err => {
+		console.log((err));
+		loadingError.value = 'Не удалось загрузить цены поставщиков. Попробуйте позже.'
+		loading.value = false;
+	});
 
 //Вводные данные
 const length = ref();   //Длиинна
@@ -232,13 +231,13 @@ const rules = computed(() => ({
 			maxValue(+(width.value/2).toFixed(2))
 		)
 	},
-    width:{
-        ...coldValidators.width,
-        heightWidth: helpers.withMessage(
+	width:{
+		...coldValidators.width,
+		heightWidth: helpers.withMessage(
 			({$params}) => `Максимальная ширина не должна быть более длинны - ${length.value} м. `,
 			widthtLessHeigh(length)
 		)
-    }
+	}
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates })
 

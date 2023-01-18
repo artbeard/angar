@@ -1,19 +1,19 @@
 <template lang="">
-    <div class="container">
+	<div class="container">
 		<div v-if="loading">
-            <div class="text-center my-5">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="my-3">Загрузка</p>
-            </div>
-        </div>
+			<div class="text-center my-5">
+				<div class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+				<p class="my-3">Загрузка</p>
+			</div>
+		</div>
 
-        <div v-else-if="loadingError !== null">
-            <div class="text-center my-5">
-                <p class="my-3">{{loadingError}}</p>
-            </div>
-        </div>
+		<div v-else-if="loadingError !== null">
+			<div class="text-center my-5">
+				<p class="my-3">{{loadingError}}</p>
+			</div>
+		</div>
 
 		<form v-else @submit.prevent="submitHandle(v$.$validate())" class="row" v-show="calculatorVisibility">
 			<div class="col-12 mb-3">
@@ -77,7 +77,7 @@
 				</span>
 			</div>
 
-            <div class="col-12 col-lg-6 mb-3">
+			<div class="col-12 col-lg-6 mb-3">
 				<label for="thicknessInsulation" class="pb-1">Толщина утепления, мм</label>
 				<InputText id="thicknessInsulation" class="w-100"
 				   v-model.number="thicknessInsulation"
@@ -92,17 +92,17 @@
 			</div>
 
 			<div class="col-12 col-lg-6 mb-3">
-                <label class="pb-1">&nbsp;</label>
-                <div class="input-group mb-3">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Рассчет</button>
-                    </div>
-                </div>
+				<label class="pb-1">&nbsp;</label>
+				<div class="input-group mb-3">
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary">Рассчет</button>
+					</div>
+				</div>
 			</div>
 
 		</form>
 
-        <div class="row" v-show="!calculatorVisibility">
+		<div class="row" v-show="!calculatorVisibility">
 			<div class="col-12 pb-5">
 				<button type="button" class="btn btn-default" @click="calculatorVisibility = true"><i class="fas mx-1 fa-arrow-left"></i> Вернуться к рассчету</button>
 				<button type="button" class="btn btn-success" @click="printResult('.calculatedDataInsulated')"><i class="fas mx-1 fa-print"></i>Распечатать коммерческое предложение</button>
@@ -120,7 +120,7 @@
 								<b>Длинна</b> (B): {{length}}м<br>
 								<b>Ширина</b> (L): {{width}}м<br>
 								<b>Высота</b> (H): {{height}}м<br>
-                                <b>Толщина утепления</b> (M): {{thicknessInsulation}}мм<br>
+								<b>Толщина утепления</b> (M): {{thicknessInsulation}}мм<br>
 								<b>Площадь</b>: {{S}}м<sup>2</sup>
 							</td>
 						</tr>
@@ -216,15 +216,15 @@ let Cost = {};
 fetch( urls.costUrl, {method: 'GET', cache: 'no-cache'})
 	.then(res => res.json())
 	.then(data => {
-        Cost = data;
-        loading.value = false;
-    })
-    .catch(err => {
-        console.log((err));
-        loadingError.value = 'Не удалось загрузить цены поставщиков. Попробуйте позже.'
-        loading.value = false;
-    });
-    
+		Cost = data;
+		loading.value = false;
+	})
+	.catch(err => {
+		console.log((err));
+		loadingError.value = 'Не удалось загрузить цены поставщиков. Попробуйте позже.'
+		loading.value = false;
+	});
+	
 //Вводные данные
 const length = ref();   //Длиинна
 const width = ref();    //Ширина
@@ -239,8 +239,8 @@ const submitted = ref(false);
 
 //Настройка валидации
 const rules = computed(() => ({
-    ...thicknessValidators,
-    height: {
+	...thicknessValidators,
+	height: {
 		minValue: helpers.withMessage(
 			({$params}) => `Минимальная высота строения должна быть не менее ${$params.min} м`,
 			minValue(cfg.limits.height.min)
@@ -250,13 +250,13 @@ const rules = computed(() => ({
 			maxValue(+(width.value/2).toFixed(2))
 		)
 	},
-    width:{
-        ...thicknessValidators.width,
-        heightWidth: helpers.withMessage(
+	width:{
+		...thicknessValidators.width,
+		heightWidth: helpers.withMessage(
 			({$params}) => `Максимальная ширина не должна быть более длинны - ${length.value} м. `,
 			widthtLessHeigh(length)
 		)
-    }
+	}
 }))
 const v$ = useVuelidate(rules, { length, width, height, numberGates, heightGates, widthGates, thicknessInsulation })
 
@@ -315,17 +315,15 @@ const submitHandle = async function (isFormCorrect){
 				//Вычисление площади
 				S.value = length.value * width.value || 0;
 				
-                let materialsAmount = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value, thicknessInsulation.value);
+				let materialsAmount = calculateMaterial(cfg, length.value, width.value, height.value, numberGates.value, heightGates.value, widthGates.value, thicknessInsulation.value);
 				costMaterial.value = calculateCostMaterial(cfg, Cost, materialsAmount, thicknessInsulation.value);
 				costWorks.value = calculateCostWork(cfg, Cost, materialsAmount, numberGates.value, S.value, costMaterial.value.totalPrice, thicknessInsulation.value);
 				// TotalPrice.value = costMaterial.value.totalPrice + costWorks.value.totalPrice;
 				// TotalPricePerM.value = TotalPrice.value / S.value;
-                TotalPrice.value = +( costMaterial.value.totalPrice + costWorks.value.totalPrice ).toFixed(2);
+				TotalPrice.value = +( costMaterial.value.totalPrice + costWorks.value.totalPrice ).toFixed(2);
 				TotalPricePerM.value = +( TotalPrice.value / S.value).toFixed(2);
-
 			}
-		})
-	;
+		});
 }
 
 </script>

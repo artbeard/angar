@@ -1,4 +1,3 @@
-//import { useVuelidate } from '@vuelidate/core'
 import { minValue, maxValue, required, helpers } from '@vuelidate/validators'
 import { cfg } from '../assets/js/cgf'
 
@@ -25,9 +24,7 @@ const coldValidators = {
 			maxValue(cfg.limits.width.max)
 		)
 	},
-	
-
-    numberGates: {
+   numberGates: {
 		//required: helpers.withMessage('Поле обязательно к заполнению', required),
 		minValue: helpers.withMessage(
 			({$params}) => `Минимальное количество ворот ${$params.min} шт. `,
@@ -41,8 +38,8 @@ const coldValidators = {
 };
 
 const thicknessValidators = {
-    ...coldValidators,
-    thicknessInsulation: {
+   ...coldValidators,
+   thicknessInsulation: {
 		minValue: helpers.withMessage(
 			({$params}) => `Минимальная толщина утепления ${$params.min} м. `,
 			minValue(cfg.limits.thicknessInsulation.min)
@@ -60,7 +57,7 @@ const thicknessValidators = {
  * @returns 
  */
 const widthtLessHeigh = (param) => (widthValue) => {
-    return widthValue <= param.value;
+   return widthValue <= param.value;
 };
 
 export {widthtLessHeigh};

@@ -13,7 +13,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'printResult',
     methods: {
-        print(selector)
+      print(selector)
 		{
 			if (typeof selector === 'string')
 			{
@@ -23,7 +23,7 @@ export default defineComponent({
 			this.$refs['printWrapper'].innerHTML = selector.innerHTML;
 			window.print();
 		},
-    },
+   },
 })
 </script>
 <style lang="css">
